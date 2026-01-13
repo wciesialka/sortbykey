@@ -29,6 +29,11 @@ def get_argparser() -> argparse.ArgumentParser:
     parser.add_argument('-i', '--input', required=True, help="Input directory for the unsorted audio files.", type=readable_directory)
     parser.add_argument("-o", "--output", required=True, help="Output directory for the sorted audio files.", type=writeable_directory)
 
+    num_cores = os.cpu_count() or 1
+    num_workers = (num_cores - 1) if num_cores > 1 else 1
+
+    parser.add_argument("-j", "--jobs", type=int, default=num_workers, help="Number of concurrent jobs to run for analyzing.")
+
     return parser
 
 def parse_args() -> argparse.Namespace:
