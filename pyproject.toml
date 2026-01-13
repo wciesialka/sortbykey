@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools >= 77.0.3"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sortbykey"
+description = "Sort audio files by key."
+license-files = ["LICEN[CS]E*"]
+requires-python = ">= 3.13"
+authors = [
+    {name = "Willow Ciesialka", email = "wciesialka@gmail.com"}
+]
+keywords = ["audio"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "License :: OSI Approved :: GNU Affero General Public License v3",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Multimedia :: Sound/Audio :: Analysis"
+]
+dynamic = ["version", "readme", "dependencies"]
+
+[project.urls]
+Repository = "https://github.com/wciesialka/sortbykey"
+Issues = "https://github.com/wciesialka/sortbykey/issues"
+
+[project.scripts]
+sortbykey = "sortbykey:__main__.main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["sortbykey*"]
+
+[tool.setuptools.dynamic]
+readme = {file = "README.md", content-type = "text/markdown"}
+version = {attr = "sortbykey.__version__"}
+dependencies = {file = "requirements.txt"}
