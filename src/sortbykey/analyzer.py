@@ -1,4 +1,5 @@
 import pathlib
+import logging
 import essentia.standard as es
 
 SUPPORTED_FILETYPES = ("wav", "aiff", "flac", "ogg", "mp3")
@@ -12,7 +13,7 @@ def camelot(key: str, scale: str) -> str:
         ("Eb", "minor"): "2A",
         ("F#", "major"): "2B",
         ("Bb", "minor"): "3A",
-        ("Db", "major"): "3B",
+        ("C#", "major"): "3B",
         ("F", "minor"): "4A",
         ("Ab", "major"): "4B",
         ("C", "minor"): "5A",
@@ -29,12 +30,12 @@ def camelot(key: str, scale: str) -> str:
         ("D", "major"): "10B",
         ("F#", "minor"): "11A",
         ("A", "major"): "11B",
-        ("Db", "minor"): "12A",
+        ("C#", "minor"): "12A",
         ("E", "major"): "12B"
     }
     if (key, scale) in wheel:
         return wheel[(key, scale)]
-    logging.info(f"Unknown key/scale: {key} {scale}")
+    logging.warn(f"Unknown key/scale: {key} {scale}")
 
 def analyze(path: pathlib.Path) -> str:
     loader = es.MonoLoader(filename = str(path))

@@ -19,14 +19,14 @@ async def worker(queue, executor):
                 camelot_key = "atonal"
             else:
                 camelot_key = analyzer.camelot(key, scale)
-            # logging.info(f"Analyzed: {filepath} -> {camelot_key}")
+            logging.info(f"Analyzed: {filepath} -> {camelot_key}")
             output_path = output_dir / camelot_key / relpath
             output_dir = output_path.parent
-            # os.makedirs(output_dir, exist_ok=True)
-            # os.rename(filepath, output_path)
-            # logging.info(f"Moved: {filepath} -> {output_path}")
+            os.makedirs(output_dir, exist_ok=True)
+            os.rename(filepath, output_path)
+            logging.info(f"Moved: {filepath} -> {output_path}")
         except Exception as e:
-            print(f"Error processing {filepath}: {e}")
+            logging.error(f"Error processing {filepath}: {e}")
         finally:
             queue.task_done()
 
