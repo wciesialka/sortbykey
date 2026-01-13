@@ -6,5 +6,5 @@ __version__ = ".".join(str(x) for x in __VERSION_INFO)
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s [%(levelname)s] %(message)s',
-    datefmt='%H:%M:%S'
+    datefmt='%Y-%m-%dT%H:%M:%S'
 )
