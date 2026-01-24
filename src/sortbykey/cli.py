@@ -19,6 +19,18 @@ def writeable_directory(p: str) -> pathlib.Path:
             raise TypeError("If path exists, must point to a writable directory.")
     return abspath
 
+def positive_nonzero_int(v: int) -> int:
+    if isinstance(v, int):
+        if v <= 0:
+            raise ValueError("Must be a positive, non-zero integer.")
+        return v
+    try:
+        v2 = int(v)
+    except:
+        raise TypeError("Must be an int")
+    else:
+        return positive_nonzero_int(v2)
+
 def get_argparser() -> argparse.ArgumentParser:
     
     parser = argparse.ArgumentParser(
@@ -32,7 +44,9 @@ def get_argparser() -> argparse.ArgumentParser:
     num_cores = os.cpu_count() or 1
     num_workers = (num_cores - 1) if num_cores > 1 else 1
 
-    parser.add_argument("-j", "--jobs", type=int, default=num_workers, help="Number of concurrent jobs to run for analyzing.")
+    parser.add_argument("-j", "--jobs", type=positive_nonzero_int, default=num_workers, help="Number of concurrent jobs to run for analyzing.")
+
+    parser.add_argument("-c", "--copy", action="store_true", help="Specify this flag to copy files instead of moving them.")
 
     return parser
 
