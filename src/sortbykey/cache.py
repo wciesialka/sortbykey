@@ -3,7 +3,7 @@ import sqlite3 as sql
 import sortbykey.fs as fs
 from collections import namedtuple
 from pathlib import Path
-from hashlib import sha256
+from xxhash import xxh64
 from typing import Tuple
 from time import time as time_s
 
@@ -87,7 +87,7 @@ class HashDB:
         :rtype: bytes
         '''
         path = filepath.resolve()
-        hasher = sha256(usedforsecurity=False)
+        hasher = xxh64()
         with open(path, "rb") as file:
             while data := file.read(chunk_size):
                 hasher.update(data)
@@ -109,8 +109,8 @@ class HashDB:
         '''
         if not isinstance(hash, bytes):
             raise TypeError(f"\"{hash=!r}\" must be type bytes, not type \"{hash.__class__.__name__}\"")
-        if len(hash) != 32:
-            raise ValueError(f"\"{hash=!r}\" must be length 32, not {len(hash)}.")
+        if len(hash) != 8:
+            raise ValueError(f"\"{hash=!r}\" must be length 8, not {len(hash)}.")
         if not isinstance(filename, str):
             raise TypeError(f"\"{filename=!r}\" must be type str, not type \"{filename.__class__.__name__}\"")
         try:
