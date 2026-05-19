@@ -4,8 +4,6 @@ import essentia.standard as es
 
 SUPPORTED_FILETYPES = ("wav", "aiff", "flac", "ogg", "mp3")
 
-key_extractor = es.KeyExtractor()
-
 def camelot(key: str, scale: str) -> str:
     wheel = {
         ("Ab", "minor"): "1A",
@@ -37,8 +35,13 @@ def camelot(key: str, scale: str) -> str:
         return wheel[(key, scale)]
     logging.warn(f"Unknown key/scale: {key} {scale}")
 
-def analyze(path: pathlib.Path) -> str:
-    loader = es.MonoLoader(filename = str(path))
-    audio = loader()
-    key, scale, strength = key_extractor(audio)
-    return (key, scale, strength)
+class Analyzer:
+
+    def __init__(self):
+        self.__key_extractor = es.KeyExtractor()
+
+    def analyze(self, path: pathlib.Path) -> str:
+        loader = es.MonoLoader(filename = str(path))
+        audio = loader()
+        key, scale, strength = self.__key_extractor(audio)
+        return (key, scale, strength)

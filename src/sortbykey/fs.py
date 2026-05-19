@@ -1,13 +1,15 @@
 import pathlib
 import logging
-from sortbykey.analyzer import SUPPORTED_FILETYPES
 
-def traverse(parent_path: pathlib.Path):
+def traverse(parent_path: pathlib.Path, *, filetype_filter = None):
     for root, dirs, files in parent_path.walk():
         for filename in files:
             filepath = root / filename
+            if filetype_filter is None:
+                yield (root, filename)
+                continue
             suffix = filepath.suffix.lower()[1:]
-            if suffix in SUPPORTED_FILETYPES:
+            if suffix in filetype_filter:
                 yield (root, filename)
     return
 

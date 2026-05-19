@@ -6,6 +6,7 @@ from pathlib import Path
 from xxhash import xxh64
 from typing import Tuple
 from time import time as time_s
+from sortbykey.analyzer import SUPPORTED_FILETYPES
 
 def now() -> int:
     return int(time_s())
@@ -328,7 +329,7 @@ class HashDB:
             self.remove_file(db_path)
         self.commit()
         # Step 2: Add/update all existing files.
-        for root, filename in fs.traverse(self.directory):
+        for root, filename in fs.traverse(self.directory, filetype_filter=SUPPORTED_FILETYPES):
             filepath = (root / filename).resolve()
             db_file = self.lookup_filepath(filepath)
             if db_file is None:
