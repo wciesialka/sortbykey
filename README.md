@@ -1,5 +1,7 @@
 # sortbykey
-Sort audio files by key
+Sort audio files by key.
+
+Easily sort music files from one directory into another by key! Uses Camelot wheel notation. Uses symlinks to keep files where they're at, and to save on system space! Options to copy files included.
 
 ## Getting Started
 
