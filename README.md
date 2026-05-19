@@ -5,9 +5,9 @@ Sort audio files by key
 
 ### Pre-requisites
 
-- Python 3.13+
-- essentia>=2.1b6.dev1389
-- xxhash>=3.6.0
+- [Python 3.13+](https://www.python.org/downloads/)
+- [Essentia](https://pypi.org/project/essentia/) >= 2.1b6.dev1389
+- [xxhash](https://pypi.org/project/xxhash/) >= 3.6.0
 
 See [requirements.txt](requirements.txt) for details. Python modules should be installed with `pip`.
 
@@ -23,18 +23,28 @@ It is recommended that you install this package in a [Python Virtual Environment
 ## Usage
 
 ```bash
-usage: sortbykey [-h] -i INPUT -o OUTPUT [-j JOBS] [-c]
+usage: sortbykey [-h] -i INPUT_DIRECTORY -o OUTPUT_DIRECTORY [-j NUM_CORES]
+                 [-a ATONALITY_CONFIDENCE_LIMIT] [-c]
 
 Sort audio files by key.
 
 options:
-  -h, --help           show this help message and exit
-  -i, --input INPUT    Required. Input directory for the unsorted audio files.
-  -o, --output OUTPUT  Required. Output directory for the sorted audio files.
-  -j, --jobs JOBS      Number of concurrent jobs to run for analyzing.
-                       Defaults to all cores minus one.
-  -c, --copy           Specify this flag to copy files instead of creating
-                       links to them.
+  -h, --help            show this help message and exit
+  -i, --input INPUT_DIRECTORY
+                        Required. Input directory for the unsorted audio
+                        files.
+  -o, --output OUTPUT_DIRECTORY
+                        Required. Output directory for the sorted audio files.
+  -j, --jobs NUM_CORES  Number of concurrent jobs to run for analyzing.
+                        Defaults to all but one core on multi-core machines,
+                        one core on single-core machines.
+  -a, --atonality ATONALITY_CONFIDENCE_LIMIT
+                        If the analyzer isn't confident of any key to this
+                        percent, it will label the sample as atonal. Defaults
+                        to 0.5.
+  -c, --copy            Optional. Specify this flag to copy files instead of
+                        creating links to them.
+
 ```
 
 ## Authors
@@ -49,3 +59,4 @@ Licensed under GNU AFFERO GENERAL PUBLIC LICENSE Version 3. See [LICENSE](LICENS
 
 - Dakota Price
 - Essentia team
+- xxhash team
