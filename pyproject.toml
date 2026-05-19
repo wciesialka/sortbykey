@@ -28,10 +28,11 @@ Issues = "https://github.com/wciesialka/sortbykey/issues"
 
 [project.scripts]
 sortbykey = "sortbykey:__main__.main"
+addbpm = "addbpm:__main__.main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
-include = ["sortbykey*"]
+include = ["sortbykey*", "addbpm*"]
 
 [tool.setuptools.dynamic]
 readme = {file = "README.md", content-type = "text/markdown"}

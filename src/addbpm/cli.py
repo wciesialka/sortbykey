@@ -34,19 +34,16 @@ def positive_nonzero_int(v: int) -> int:
 def get_argparser() -> argparse.ArgumentParser:
     
     parser = argparse.ArgumentParser(
-        prog="sortbykey",
-        description="Sort audio files by key."
+        prog="addbpm",
+        description="Add BPM to audio files metadata."
     )
 
-    parser.add_argument('-i', '--input', required=True, help="Required. Input directory for the unsorted audio files.", type=readable_directory)
-    parser.add_argument("-o", "--output", required=True, help="Required. Output directory for the sorted audio files.", type=writeable_directory)
+    parser.add_argument('-i', '--input', required=True, help="Input directory for the audio files.", type=readable_directory)
 
     num_cores = os.cpu_count() or 1
     num_workers = (num_cores - 1) if num_cores > 1 else 1
 
-    parser.add_argument("-j", "--jobs", type=positive_nonzero_int, default=num_workers, help="Number of concurrent jobs to run for analyzing. Defaults to all cores minus one.")
-
-    parser.add_argument("-c", "--copy", action="store_true", help="Specify this flag to copy files instead of creating links to them.")
+    parser.add_argument("-j", "--jobs", type=positive_nonzero_int, default=num_workers, help="Number of concurrent jobs to run for analyzing.")
 
     return parser
 
