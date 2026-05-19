@@ -9,11 +9,12 @@ from sortbykey.workmanager import Worker
 
 class Sorter(Worker):
 
-    def __init__(self, input_dir, output_dir, *, copy_files=False):
+    def __init__(self, input_dir, output_dir, *, atonality=0.5, copy_files=False):
         # Establish input/output
         self.__input_dir = input_dir
         self.__output_dir = output_dir
         self.should_copy_files = copy_files
+        self.atonality_confidence_limit = atonality
         # Setup cache
         # self.__cache = HashDB(self.output_dir)
         # logging.info("Updating cache...")
@@ -39,18 +40,18 @@ class Sorter(Worker):
             size = filepath.stat().st_size
             yield (size, ((filepath, filename), {}))
 
-    def perform_task(self, filepath, filename, *, atonal_limit=0.5):
+    def perform_task(self, filepath, filename):
         relpath = filepath.relative_to(self.input_dir)
         logging.info("Analyzing %s...", relpath)
         sorting_info = analyzer.analyze(filepath)
-        return sorting_info, (filepath, filename), atonal_limit     
+        return sorting_info, (filepath, filename)     
 
     def task_callback(self, task_result):
-        sorting_info, file_info, atonal_limit = task_result
+        sorting_info, file_info = task_result
         key, scale, strength = sorting_info
         filepath, filename = file_info
         relpath = filepath.relative_to(self.input_dir)
-        camelot_key = "atonal" if strength <= atonal_limit else analyzer.camelot(key, scale)
+        camelot_key = "atonal" if strength <= self.atonality_confidence_limit else analyzer.camelot(key, scale)
         logging.info(f"Analyzed: {filepath} -> {camelot_key}")
         output_path = self.output_dir / camelot_key / relpath
         output_dir = output_path.parent

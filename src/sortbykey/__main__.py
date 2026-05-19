@@ -10,10 +10,12 @@ def main():
     output_dir = args.output
     num_workers = args.jobs
     copy = args.copy
+    atonality = args.atonality
 
-    sorter = Sorter(input_dir, output_dir, copy_files=copy)
-    logging.info(f"Analyzing files \"{input_dir}\" -> \"{output_dir}\" w/ {num_workers} jobs (copy {"on" if copy else "off"}).")
+    sorter = Sorter(input_dir, output_dir, atonality=atonality, copy_files=copy)
+    logging.info(f"Analyzing files \"{input_dir}\" -> \"{output_dir}\" w/ {num_workers} jobs (copy {"on" if copy else "off"}, atonality confidence limit={atonality}).")
     asyncio.run(sorter.start_work(num_workers))
+    logging.info("Sleeping for one second to make sure everyone closes the door behind themselves...")
     sleep(1)
     logging.info("Finished!")
     sorter.close()
