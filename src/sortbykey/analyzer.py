@@ -35,13 +35,10 @@ def camelot(key: str, scale: str) -> str:
         return wheel[(key, scale)]
     logging.warn(f"Unknown key/scale: {key} {scale}")
 
-class Analyzer:
+__ANALYZER = es.KeyExtractor()
 
-    def __init__(self):
-        self.__key_extractor = es.KeyExtractor()
-
-    def analyze(self, path: pathlib.Path) -> str:
-        loader = es.MonoLoader(filename = str(path))
-        audio = loader()
-        key, scale, strength = self.__key_extractor(audio)
-        return (key, scale, strength)
+def analyze(path: pathlib.Path) -> str:
+    loader = es.MonoLoader(filename = str(path))
+    audio = loader()
+    key, scale, strength = __ANALYZER(audio)
+    return (key, scale, strength)
