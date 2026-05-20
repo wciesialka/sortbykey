@@ -2,10 +2,10 @@ import os
 import shutil
 import logging
 import asyncio
-import sortbykey.analyzer as analyzer 
-from sortbykey.cache import HashDB
+import sortbykey.analyzers as analyzer 
 from sortbykey import fs
 from sortbykey.workmanager import Worker
+from sortbykey.wheel import WheelOfFifths
 
 class Sorter(Worker):
 
@@ -31,7 +31,7 @@ class Sorter(Worker):
         return self.__output_dir
 
     def generate_priority_queue_entries(self):
-        for root, filename in fs.traverse(self.input_dir, filetype_filter=analyzer.SUPPORTED_FILETYPES):
+        for root, filename in fs.traverse(self.input_dir, filetype_filter=analyzer.SUPPORTED_READ_FILETYPES):
             filepath = root / filename
             # Check if file exists in database
             # db_file = self.__cache.lookup_file_by_hash(filepath)
@@ -43,7 +43,7 @@ class Sorter(Worker):
     def perform_task(self, filepath, filename):
         relpath = filepath.relative_to(self.input_dir)
         logging.info("Analyzing %s...", relpath)
-        sorting_info = analyzer.analyze(filepath)
+        sorting_info = analyzer.analyze_key(filepath)
         return sorting_info, (filepath, filename)     
 
     def task_callback(self, task_result):
@@ -51,7 +51,7 @@ class Sorter(Worker):
         key, scale, strength = sorting_info
         filepath, filename = file_info
         relpath = filepath.relative_to(self.input_dir)
-        camelot_key = "atonal" if strength <= self.atonality_confidence_limit else analyzer.camelot(key, scale)
+        camelot_key = "atonal" if strength <= self.atonality_confidence_limit else WheelOfFifths.camelot_notation(key, scale)
         logging.info(f"Analyzed: {filepath} -> {camelot_key}")
         output_path = self.output_dir / camelot_key / relpath
         output_dir = output_path.parent

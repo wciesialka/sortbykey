@@ -1,7 +1,7 @@
 import asyncio
 import logging
+import sortbykey.keysort.cli as cli
 from time import sleep
-from sortbykey import cli
 from sortbykey.sorter import Sorter
 
 def main():

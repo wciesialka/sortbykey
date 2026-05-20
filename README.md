@@ -6,6 +6,7 @@ Sort audio files by key
 ### Pre-requisites
 
 - [Python 3.13+](https://www.python.org/downloads/)
+- [ffmpeg](https://ffmpeg.org/)
 - [Essentia](https://pypi.org/project/essentia/) >= 2.1b6.dev1389
 - [xxhash](https://pypi.org/project/xxhash/) >= 3.6.0
 
