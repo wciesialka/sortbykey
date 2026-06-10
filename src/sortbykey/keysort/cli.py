@@ -6,7 +6,7 @@ from sortbykey.analyzers import SUPPORTED_READ_FILETYPES
 
 def get_argparser() -> argparse.ArgumentParser:
     
-    supported_filetypes = ",".join(f".{ft}" for ft in SUPPORTED_READ_FILETYPES)
+    supported_filetypes = ", ".join(f".{ft}" for ft in SUPPORTED_READ_FILETYPES)
 
     parser = argparse.ArgumentParser(
         prog="sortbykey",

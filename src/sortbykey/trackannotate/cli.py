@@ -8,7 +8,7 @@ SUPPORTED_WRITE_FILETYPES = (*ID3v2_FILETYPES, *VORBIS_COMMENTS_FILETYPES)
 
 def get_argparser() -> argparse.ArgumentParser:
     
-    supported_filetypes = ",".join(f".{ft}" for ft in SUPPORTED_WRITE_FILETYPES)
+    supported_filetypes = ", ".join(f".{ft}" for ft in SUPPORTED_WRITE_FILETYPES)
 
     parser = argparse.ArgumentParser(
         prog="trackannotate",
