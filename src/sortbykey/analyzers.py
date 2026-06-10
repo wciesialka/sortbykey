@@ -3,7 +3,7 @@ import logging
 import essentia.standard as es
 
 SUPPORTED_READ_FILETYPES = ("wav", "aiff", "flac", "ogg", "mp3")
-SUPPORTED_WRITE_FILETYPES = ("aiff", )
+SUPPORTED_WRITE_FILETYPES = ("aiff", "mp3", "aif")
 
 __KEY_ANALYZER = es.KeyExtractor()
 __BPM_ANALYZER = es.RhythmExtractor2013()

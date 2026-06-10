@@ -8,6 +8,13 @@ def readable_directory(p: str) -> pathlib.Path:
         return abspath
     raise TypeError("Path must point to an existing and readable directory.")
 
+def readable_file(p: str) -> pathlib.Path:
+    path = pathlib.Path(p)
+    abspath = path.expanduser().resolve()
+    if abspath.exists() and abspath.is_file() and os.access(abspath, os.R_OK):
+        return abspath
+    raise TypeError("Path must point to an existing and readable file.")
+
 def writeable_directory(p: str) -> pathlib.Path:
     path = pathlib.Path(p)
     abspath = path.expanduser().resolve()

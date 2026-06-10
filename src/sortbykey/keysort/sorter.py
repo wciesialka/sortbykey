@@ -3,6 +3,7 @@ import shutil
 import logging
 import asyncio
 import sortbykey.analyzers as analyzer 
+import sortbykey.trackannotate.encoder as encoder
 from sortbykey import fs
 from sortbykey.workmanager import Worker
 from sortbykey.wheel import WheelOfFifths
@@ -43,15 +44,20 @@ class Sorter(Worker):
     def perform_task(self, filepath, filename):
         relpath = filepath.relative_to(self.input_dir)
         logging.info("Analyzing %s...", relpath)
-        sorting_info = analyzer.analyze_key(filepath)
-        return sorting_info, (filepath, filename)     
+        # Try to get existing key
+        camelot_key = encoder.get_key_metadata(filepath)
+        # If key not found, analyze and encode
+        if not camelot_key:
+            key, scale, strength = analyzer.analyze_key(filepath)
+            camelot_key = "atonal" if strength <= self.atonality_confidence_limit else WheelOfFifths.camelot_notation(key, scale)
+            encoder.write_aiff_metadata(filepath, key=None if camelot_key == "atonal" else camelot_key)
+        return (camelot_key,), (filepath, filename)     
 
     def task_callback(self, task_result):
         sorting_info, file_info = task_result
-        key, scale, strength = sorting_info
+        camelot_key = sorting_info[0]
         filepath, filename = file_info
         relpath = filepath.relative_to(self.input_dir)
-        camelot_key = "atonal" if strength <= self.atonality_confidence_limit else WheelOfFifths.camelot_notation(key, scale)
         logging.info(f"Analyzed: {filepath} -> {camelot_key}")
         output_path = self.output_dir / camelot_key / relpath
         output_dir = output_path.parent

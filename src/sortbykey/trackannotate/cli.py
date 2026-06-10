@@ -2,7 +2,9 @@ import argparse
 import pathlib
 import os
 from sortbykey.cli import *
-from sortbykey.analyzers import SUPPORTED_WRITE_FILETYPES
+from sortbykey.trackannotate.encoder import ID3v2_FILETYPES, VORBIS_COMMENTS_FILETYPES
+
+SUPPORTED_WRITE_FILETYPES = (*ID3v2_FILETYPES, *VORBIS_COMMENTS_FILETYPES)
 
 def get_argparser() -> argparse.ArgumentParser:
     
@@ -10,20 +12,18 @@ def get_argparser() -> argparse.ArgumentParser:
 
     parser = argparse.ArgumentParser(
         prog="trackannotate",
-        description="Add key and bpm metadata to music files.",
+        description="Add key and bpm metadata to a music file.",
         epilog=f"Supported filetypes are: {supported_filetypes}"
     )
 
-    parser.add_argument('-i', '--input', required=True, type=readable_directory, metavar="INPUT_DIRECTORY",
-        help="Required. Input directory for the untagged audio files.")
-
-    num_cores = os.cpu_count() or 1
-    num_workers = (num_cores - 1) if num_cores > 1 else 1
-    parser.add_argument("-j", "--jobs", type=positive_nonzero_int, default=num_workers, metavar="NUM_CORES",
-        help="Number of concurrent jobs to run for analyzing. Defaults to all but one core on multi-core machines, one core on single-core machines.")
+    parser.add_argument('input', type=readable_file, metavar="INPUT_FILE",
+        help="Required. Filepath for the untagged audio file.")
 
     parser.add_argument("-a", "--atonality", type=float_0_to_1, default=0.5, metavar="ATONALITY_CONFIDENCE_LIMIT",
-        help="If the analyzer isn't confident of any key to this percent, it will label the sample as atonal. Defaults to 0.5.")
+        help="If the analyzer isn't confident of any key to this percent, it won't write key metadata. Defaults to 0.5.")
+
+    parser.add_argument("-b", "--bpmconf", type=float_0_to_1, default=0.5, metavar="BPM_CONFIDENCE_LIMIT",
+        help="If the analyzer isn't confident of the BPM to this percent, it won't write BPM metadata. Defaults to 0.5.")
 
     return parser
 
