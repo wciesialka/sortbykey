@@ -23,6 +23,10 @@ It is recommended that you install this package in a [Python Virtual Environment
 
 ## Usage
 
+This package contains several commands. Below are their usage guides:
+
+### sortbykey
+
 ```bash
 usage: sortbykey [-h] -i INPUT_DIRECTORY -o OUTPUT_DIRECTORY [-j NUM_CORES]
                  [-a ATONALITY_CONFIDENCE_LIMIT] [-c]
@@ -46,6 +50,32 @@ options:
   -c, --copy            Optional. Specify this flag to copy files instead of
                         creating links to them.
 
+Supported filetypes are: .wav, .aiff, .flac, .ogg, .mp3
+
+```
+
+### trackannotate
+
+```bash
+usage: trackannotate [-h] [-a ATONALITY_CONFIDENCE_LIMIT]
+                     [-b BPM_CONFIDENCE_LIMIT]
+                     INPUT_FILE
+
+Add key and bpm metadata to a music file.
+
+positional arguments:
+  INPUT_FILE            Required. Filepath for the untagged audio file.
+
+options:
+  -h, --help            show this help message and exit
+  -a, --atonality ATONALITY_CONFIDENCE_LIMIT
+                        If the analyzer isn't confident of any key to this
+                        percent, it won't write key metadata. Defaults to 0.5.
+  -b, --bpmconf BPM_CONFIDENCE_LIMIT
+                        If the analyzer isn't confident of the BPM to this
+                        percent, it won't write BPM metadata. Defaults to 0.5.
+
+Supported filetypes are: .aiff, .mp3, .aif, .flac, .ogg, .opus
 ```
 
 ## Authors
@@ -60,4 +90,3 @@ Licensed under GNU AFFERO GENERAL PUBLIC LICENSE Version 3. See [LICENSE](LICENS
 
 - Dakota Price
 - Essentia team
-- xxhash team
