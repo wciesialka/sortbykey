@@ -35,7 +35,8 @@ def write_aiff_metadata(input_path: Path, bpm: Optional[int] = None, key: Option
     else:
         raise UnsupportedFiletypeError(input_extension)
     # Build the command
-    command = [FFMPEG, "-y", "-i", str(input_path), "-c:a", "copy", "-write_id3v2", "1"]
+    filepath = input_path.resolve()
+    command = [FFMPEG, "-y", "-i", str(filepath), "-c:a", "copy", "-write_id3v2", "1"]
     if not (bpm is None):
         for bpm_field in bpm_fields:
             command.extend(("-metadata", f"{bpm_field}={round(bpm*10)/10}"))

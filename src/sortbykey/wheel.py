@@ -38,3 +38,10 @@ class WheelOfFifths(Enum):
         for key in WheelOfFifths:
             if key.value[2] == camelot.upper():
                 return (key.value[0], key.value[1])
+    
+    @staticmethod
+    def is_camelot_notation(variable: str):        
+        for key in WheelOfFifths:
+            if variable == key.value[2]:
+                return True
+        return variable == "o"

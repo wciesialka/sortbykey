@@ -29,10 +29,11 @@ Issues = "https://github.com/wciesialka/sortbykey/issues"
 [project.scripts]
 sortbykey = "sortbykey.keysort:__main__.main"
 trackannotate = "sortbykey.trackannotate:__main__.main"
+sortbytempo = "sortbykey.bpmsort:__main__.main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
-include = ["sortbykey*", "trackannotate*"]
+include = ["sortbykey*"]
 
 [tool.setuptools.dynamic]
 readme = {file = "README.md", content-type = "text/markdown"}

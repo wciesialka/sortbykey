@@ -6,15 +6,25 @@ import sortbykey.analyzers as analyzer
 import sortbykey.trackannotate.encoder as encoder
 from sortbykey import fs
 from sortbykey.workmanager import Worker
-from sortbykey.wheel import WheelOfFifths
 
-class Sorter(Worker):
+def get_bin(variable, bin_width):
+    integer = variable // bin_width
+    if integer < 0:
+        low_end = (integer - 1) * bin_width
+        high_end = integer * bin_width
+    else:
+        low_end = integer * bin_width
+        high_end = (integer + 1) * bin_width
+    return (low_end, high_end)
 
-    def __init__(self, input_dir, output_dir, *, atonality=0.5, copy_files=False):
+class BPMSorter(Worker):
+
+    def __init__(self, input_dir, output_dir, *, bpm_confidence=0.5, copy_files=False, bin_width=1.0):
         self.__input_dir = input_dir
         self.__output_dir = output_dir
         self.should_copy_files = copy_files
-        self.atonality_confidence_limit = atonality
+        self.bpm_confidence = bpm_confidence
+        self.bin_width = bin_width
 
     @property
     def input_dir(self):
@@ -34,26 +44,26 @@ class Sorter(Worker):
         relpath = filepath.relative_to(self.input_dir)
         logging.info("Analyzing %s...", relpath)
         # Try to get existing key
-        camelot_key = encoder.get_key_metadata(filepath)
-        # If existing key is not Camelot notation, mark None for re-analyzation.
-        if not WheelOfFifths.is_camelot_notation(camelot_key):
-            camelot_key = None
+        tempo = encoder.get_bpm_metadata(filepath)
         # If key not found, analyze and encode
-        if not camelot_key:
-            key, scale, strength = analyzer.analyze_key(filepath)
-            camelot_key = None if strength < self.atonality_confidence_limit else WheelOfFifths.camelot_notation(key, scale)
-            encoder.write_aiff_metadata(filepath, key=camelot_key)
-        return (camelot_key,), (filepath, filename)     
+        if not tempo:
+            bpm, beats, beats_confidence = analyzer.analyze_bpm(filepath)
+            tempo = None if beats_confidence <= self.bpm_confidence else bpm
+            encoder.write_aiff_metadata(filepath, bpm=tempo)
+        if tempo:
+            tempo_bin = get_bin(float(tempo), self.bin_width)
+            tempo_bin = f"{tempo_bin[0]} - {tempo_bin[1]}"
+        else:
+            tempo_bin = "ametric"
+        return (tempo_bin,), (filepath, filename)     
 
     def task_callback(self, task_result):
         sorting_info, file_info = task_result
-        camelot_key = sorting_info[0]
+        tempo_bin = sorting_info[0]
         filepath, filename = file_info
         relpath = filepath.relative_to(self.input_dir)
-        if camelot_key is None:
-            camelot_key = "atonal"
-        logging.info(f"Analyzed: {filepath} -> {camelot_key}")
-        output_path = self.output_dir / camelot_key / relpath
+        logging.info(f"Analyzed: {filepath} -> {tempo_bin}")
+        output_path = self.output_dir / tempo_bin / relpath
         output_dir = output_path.parent
 
         if output_path.exists():
