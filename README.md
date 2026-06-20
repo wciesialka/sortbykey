@@ -1,7 +1,5 @@
 # sortbykey
-Sort audio files by key.
-
-Easily sort music files from one directory into another by key! Uses Camelot wheel notation. Uses symlinks to keep files where they're at, and to save on system space! Options to copy files included.
+Sort audio files by key
 
 ## Getting Started
 
@@ -16,20 +14,12 @@ See [requirements.txt](requirements.txt) for details. Python modules should be i
 
 ### Installation
 
-It is recommended that you install this package in a [Python Virtual Environment](https://docs.python.org/3/library/venv.html). This README will take you through how to do so:
-
-1. [Create a virtual environment](https://docs.python.org/3/library/venv.html#creating-virtual-environments) using `python3 -m venv env/`
-2. [Activate the virtual enviroment](https://docs.python.org/3/library/venv.html#how-venvs-work). POSIX Bash: `source env/bin/activate`. Windows PowerShell: `<venv>\Scripts\Activate.ps1`. Windows Batch: `<venv>\Scripts\activate.bat`.
-
-This package is available on PyPi. To install it from PyPi, use `pip install sortbykey`.
-
-Alternatively, to install it from this repository:
+It is recommended that you install this package in a [Python Virtual Environment](https://docs.python.org/3/library/venv.html). This README will take you through how to do so. 
 
 1. [Clone the repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository), or otherwise download the source code.
-2. Enter the directory created by cloning the repository.
-3. [Create a virtual environment](https://docs.python.org/3/library/venv.html#creating-virtual-environments) using `python3 -m venv env/`
-4. [Activate the virtual enviroment](https://docs.python.org/3/library/venv.html#how-venvs-work). POSIX Bash: `source env/bin/activate`. Windows PowerShell: `<venv>\Scripts\Activate.ps1`. Windows Batch: `<venv>\Scripts\activate.bat`.
-5. [Install the package](https://pip.pypa.io/en/stable/user_guide/#installing-packages) using `python3 -m pip install .`.
+2. [Create a virtual environment](https://docs.python.org/3/library/venv.html#creating-virtual-environments) using `python3 -m venv env/`
+3. [Activate the virtual enviroment](https://docs.python.org/3/library/venv.html#how-venvs-work). POSIX Bash: `source env/bin/activate`. Windows PowerShell: `<venv>\Scripts\Activate.ps1`. Windows Batch: `<venv>\Scripts\activate.bat`.
+4. [Install the package](https://pip.pypa.io/en/stable/user_guide/#installing-packages) using `python3 -m pip install .`.
 
 ## Usage
 
