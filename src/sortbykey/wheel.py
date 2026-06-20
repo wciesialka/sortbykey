@@ -7,7 +7,7 @@ class WheelOfFifths(Enum):
     Ebm = ('Eb', 'minor', '2A')
     FM = ('Gb', 'major', '2B')
     Bbm = ('Bb', 'minor', '3A')
-    CM = ('C', 'major', '3B')
+    CM = ('Db', 'major', '3B')
     Fm = ('F', 'minor', '4A')
     AbM = ('Ab', 'major', '4B')
     Cm = ('C', 'minor', '5A')
@@ -24,7 +24,7 @@ class WheelOfFifths(Enum):
     DM = ('D', 'major', '10B')
     Fm_ = ('Gb', 'minor', '11A')
     AM = ('A', 'major', '11B')
-    Cm_ = ('C', 'minor', '12A')
+    Cm_ = ('Db', 'minor', '12A')
     EM = ('E', 'major', '12B')
 
     @staticmethod
