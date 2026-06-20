@@ -5,6 +5,7 @@ import shutil
 from abc import ABC, abstractmethod
 from concurrent.futures import ProcessPoolExecutor
 from typing import Tuple, Any, Generator, Dict
+from traceback import print_tb, print_exception
 
 class Worker(ABC):
 
@@ -81,7 +82,9 @@ class Worker(ABC):
             try:
                 await self.run_in_pool(executor, *task_args, **task_kwargs)
             except Exception as e:
-                logging.error(f"Error processing {data}: {e}")
+                logging.error(f"Error processing {data}. See below for details:")
+                print_exception(e)
+                print_tb(e.__traceback__)
             finally:
                 queue.task_done()
 

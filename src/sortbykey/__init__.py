@@ -1,6 +1,6 @@
 import logging
 
-__VERSION_INFO = (2026, 5, 19, 2)
+__VERSION_INFO = (2026, 6, 19, 4)
 __version__ = ".".join(str(x) for x in __VERSION_INFO)
 
 logging.basicConfig(

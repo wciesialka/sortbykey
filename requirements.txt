@@ -1,2 +1,2 @@
 essentia>=2.1b6.dev1389
-xxhash>=3.6.0
+mutagen>=1.47.0

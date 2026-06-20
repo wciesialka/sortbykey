@@ -1,8 +1,8 @@
 import asyncio
 import logging
+import sortbykey.keysort.cli as cli
 from time import sleep
-from sortbykey import cli
-from sortbykey.sorter import Sorter
+from sortbykey.keysort.sorter import Sorter
 
 def main():
     args = cli.parse_args()
@@ -18,7 +18,6 @@ def main():
     logging.info("Sleeping for one second to make sure everyone closes the door behind themselves...")
     sleep(1)
     logging.info("Finished!")
-    sorter.close()
 
 if __name__ == "__main__":
     main()
