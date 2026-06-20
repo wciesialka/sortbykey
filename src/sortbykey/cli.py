@@ -62,3 +62,15 @@ def float_0_to_1(p: float) -> float:
         raise TypeError("Must be a float")
     else:
         return float_0_to_1(p2)
+
+def positive_orzero_float(v: float) -> float:
+    if isinstance(v, float):
+        if v < 0:
+            raise ValueError("Must be a positive float.")
+        return v
+    try:
+        v2 = float(v)
+    except:
+        raise TypeError("Must be a float")
+    else:
+        return positive_nonzero_float(v2)

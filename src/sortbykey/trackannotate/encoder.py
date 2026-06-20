@@ -3,6 +3,8 @@ import subprocess
 import json
 import tempfile
 import os
+import mutagen
+from mutagen.id3 import TBPM, TKEY, TIT2
 from pathlib import Path
 from typing import Optional
 
@@ -21,76 +23,52 @@ class UnsupportedFiletypeError(Exception):
         self.message = f"Invalid filetype \"{filetype}\" is not of valid filetype ({valid_filetypes})."
 
 def write_aiff_metadata(input_path: Path, bpm: Optional[int] = None, key: Optional[str] = None, **other_metadata):
-    # Create a temporary file to write into
-    tmp = tempfile.NamedTemporaryFile(dir=input_path.parent, delete=False, suffix=input_path.suffix)
-    tmp_path = Path(tmp.name)
     # Find filetype, raise error if not accepted
     input_extension = input_path.suffix[1:]
+    is_id3 = False
     if input_extension in ID3v2_FILETYPES:
         bpm_fields = ("TBPM", )
         key_fields = ("TKEY", )
+        is_id3 = True
     elif input_extension in VORBIS_COMMENTS_FILETYPES:
         bpm_fields = ("BPM", "TEMPO")
         key_fields = ("KEY", "INITIALKEY")
     else:
         raise UnsupportedFiletypeError(input_extension)
-    # Build the command
+    # Load the file to mutagen
     filepath = input_path.resolve()
-    command = [FFMPEG, "-y", "-i", str(filepath), "-c:a", "copy", "-write_id3v2", "1"]
+    audio_file = mutagen.File(filepath)
+
     if not (bpm is None):
-        for bpm_field in bpm_fields:
-            command.extend(("-metadata", f"{bpm_field}={round(bpm*10)/10}"))
+        tempo = f"{round(bpm*10)/10}"
+        if is_id3:
+            audio_file["TBPM"] = TBPM(text=[tempo])  # Use the actual frame ID
+        else:
+            for bpm_field in bpm_fields:  # Loop only for Vorbis
+                audio_file[bpm_field] = tempo
+
     if not (key is None):
-        for key_field in key_fields:
-            command.extend(("-metadata", f"{key_field}={key}"))
+        if is_id3:
+            audio_file["TKEY"] = TKEY(text=[key])  # Use the actual frame ID
+        else:
+            for key_field in key_fields:  # Loop only for Vorbis
+                audio_file[key_field] = key
+
     if other_metadata:
         for metadata_name, metadata_value in other_metadata.items():
-            command.extend(("-metadata", f"{metadata_name}={metadata_value}"))
-    command.append(str(tmp_path))
-    # Run the subprocess
-    process = subprocess.Popen(command,
-                               stdout=subprocess.PIPE,    
-                               stderr=subprocess.PIPE,    
-                               text=True)
-    stdout, stderr = process.communicate(timeout=300)
-
-    if process.returncode != 0 or "Error" in stderr:    
-        tmp_path.unlink(missing_ok=True)    
-        raise RuntimeError(f"ffmpeg failed:\n{stderr}")
-    # Replace the original file with the temporary file
-    if tmp_path.exists() and tmp_path.stat().st_size > 0:
-        os.replace(tmp_path, input_path)
-    else:    
-        raise RuntimeError("Output file was not created")
+            if is_id3:
+                audio_file.tags[metadata_name] = TIT2(text=[str(metadata_value)])
+            else:
+                audio_file.tags[metadata_name] = str(metadata_value)
+    audio_file.save()
 
 def get_metadata(input_path: Path, metadata_name: str):
     """Extract metadata from an audio file."""
-    file_path = input_path.resolve()
+    filepath = input_path.resolve()
+    audio_file = mutagen.File(filepath)
     try:
-        result = subprocess.run(
-            [
-                'ffprobe',
-                '-v', 'error',
-                '-print_format', 'json',
-                '-show_format',
-                str(file_path)
-            ],
-            capture_output=True,
-            text=True,
-            check=True
-        )
-        
-        data = json.loads(result.stdout)
-        tags = data.get('format', {}).get('tags', {})
-        
-        metadata_value = tags.get(metadata_name.upper()) or tags.get(metadata_name.lower()) or tags.get(metadata_name)
-        return metadata_value
-    
-    except subprocess.CalledProcessError as e:
-        print(f"ffprobe error: {e.stderr}")
-        return None
-    except json.JSONDecodeError:
-        print("Failed to parse ffprobe output")
+        return audio_file[metadata_name]
+    except:
         return None
 
 def get_key_metadata(input_path: Path): 

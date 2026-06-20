@@ -30,6 +30,7 @@ Issues = "https://github.com/wciesialka/sortbykey/issues"
 sortbykey = "sortbykey.keysort:__main__.main"
 trackannotate = "sortbykey.trackannotate:__main__.main"
 sortbytempo = "sortbykey.bpmsort:__main__.main"
+audiotags = "sortbykey.audiotags:__main__.main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

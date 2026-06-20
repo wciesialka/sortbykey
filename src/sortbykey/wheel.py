@@ -5,7 +5,7 @@ class WheelOfFifths(Enum):
     Abm = ('Ab', 'minor', '1A')
     BM = ('B', 'major', '1B')
     Ebm = ('Eb', 'minor', '2A')
-    FM = ('F', 'major', '2B')
+    FM = ('Gb', 'major', '2B')
     Bbm = ('Bb', 'minor', '3A')
     CM = ('C', 'major', '3B')
     Fm = ('F', 'minor', '4A')
@@ -22,16 +22,30 @@ class WheelOfFifths(Enum):
     GM = ('G', 'major', '9B')
     Bm = ('B', 'minor', '10A')
     DM = ('D', 'major', '10B')
-    Fm_ = ('F', 'minor', '11A')
+    Fm_ = ('Gb', 'minor', '11A')
     AM = ('A', 'major', '11B')
     Cm_ = ('C', 'minor', '12A')
     EM = ('E', 'major', '12B')
 
     @staticmethod
+    def normalize_note(note: str) -> str:
+        """Convert sharp notation to flat notation."""
+        sharp_to_flat = {
+            'F#': 'Gb',
+            'C#': 'Db',
+            'G#': 'Ab',
+            'D#': 'Eb',
+            'A#': 'Bb',
+        }
+        return sharp_to_flat.get(note.upper(), note)
+
+    @staticmethod
     def camelot_notation(root_note, scale):
+        root_note = WheelOfFifths.normalize_note(root_note)
         for key in WheelOfFifths:
-            if key.value[0] == root_note and key.value[1] == scale:
+            if key.value[0] == root_note and key.value[1] == scale.lower():
                 return key.value[2]
+        return None
     
     @staticmethod
     def wheel_notation(camelot):

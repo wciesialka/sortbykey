@@ -24,8 +24,8 @@ def get_argparser() -> argparse.ArgumentParser:
     parser.add_argument("-j", "--jobs", type=positive_nonzero_int, default=num_workers, metavar="NUM_CORES",
         help="Number of concurrent jobs to run for analyzing. Defaults to all but one core on multi-core machines, one core on single-core machines.")
 
-    parser.add_argument("-a", "--atonality", type=float_0_to_1, default=0.5, metavar="ATONALITY_CONFIDENCE_LIMIT",
-        help="If the analyzer isn't confident of any key to this percent, it will label the sample as atonal. Defaults to 0.5.")
+    parser.add_argument("-a", "--atonality", type=positive_orzero_float, default=0.2, metavar="ATONALITY_STRENGTH_LIMIT",
+        help="If the strength of the key is below this limit, the audio file will be labeled atonal. Defaults to 0.2.")
 
     parser.add_argument("-c", "--copy", action="store_true", 
         help="Optional. Specify this flag to copy files instead of creating links to them.")

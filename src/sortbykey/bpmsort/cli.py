@@ -24,8 +24,8 @@ def get_argparser() -> argparse.ArgumentParser:
     parser.add_argument("-j", "--jobs", type=positive_nonzero_int, default=num_workers, metavar="NUM_CORES",
         help="Number of concurrent jobs to run for analyzing. Defaults to all but one core on multi-core machines, one core on single-core machines.")
 
-    parser.add_argument("-b", "--bpmconf", type=float_0_to_1, default=0.25, metavar="BPM_CONFIDENCE_LIMIT",
-        help="If the analyzer isn't confident of the BPM to this percent, it will consider the audio file ametric. Defaults to 0.25.")
+    parser.add_argument("-a", "--ametric", type=positive_orzero_float, default=0.2, metavar="AMETRIC_STRENGTH_LIMIT",
+        help="If the strength of the bpm is below this limit, the audio file will be considered ametric. Defaults to 0.2.")
 
     parser.add_argument("-w", "--binwidth", type=positive_nonzero_float, default=1.0, metavar="TEMPO_BIN_WIDTH",
         help="The width of bins to sort audio files into, in beats per minute. Defaults to 1.0 bpm.")

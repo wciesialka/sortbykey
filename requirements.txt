@@ -1,1 +1,2 @@
 essentia>=2.1b6.dev1389
+mutagen>=1.47.0

@@ -10,7 +10,7 @@ def main():
     output_dir = args.output
     num_workers = args.jobs
     copy = args.copy
-    bpm_confidence = args.bpmconf
+    bpm_confidence = args.ametric
     bin_width = args.binwidth
 
     sorter = Sorter(input_dir, output_dir, bpm_confidence=bpm_confidence, copy_files=copy, bin_width=bin_width)

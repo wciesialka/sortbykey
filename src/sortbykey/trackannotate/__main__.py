@@ -2,15 +2,16 @@ import asyncio
 import logging
 import sortbykey.trackannotate.cli as cli
 from time import sleep
-from sortbykey.trackannotate.tagger import analyze_and_annotate
+from sortbykey.trackannotate.tagger import Tagger
 
 def main():
     args = cli.parse_args()
     input_file = args.input
     atonality = args.atonality
-    bpm_confidence = args.bpmconf
+    bpm_confidence = args.ametric
 
-    analyze_and_annotate(input_file, atonality=atonality, bpm_confidence=bpm_confidence)
+    tagger = Tagger(input_file, atonality=atonality, bpm_confidence=bpm_confidence)
+    tagger.tag()
 
     logging.info("Finished!")
 
